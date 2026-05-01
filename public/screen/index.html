@@ -41,6 +41,16 @@
             height: calc(100vh - 8vw);
         }
 
+        @media (max-width: 1200px) {
+            .layout {
+                grid-template-columns: 1fr;
+                height: auto;
+                overflow-y: auto;
+            }
+            body { overflow-y: auto; }
+            .main-card { min-height: 500px; }
+        }
+
         .main-card {
             background: var(--glass);
             backdrop-filter: blur(40px);
@@ -51,6 +61,13 @@
             flex-direction: column;
             position: relative;
             overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            .main-card { padding: 2rem; border-radius: 2rem; }
+            .q-text { font-size: 2rem; }
+            .options-grid { grid-template-columns: 1fr; }
+            .big-title { font-size: 3rem; }
         }
 
         .header {
