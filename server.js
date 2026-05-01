@@ -19,7 +19,7 @@ const io = new Server(server, {
 app.use(express.static('public'));
 app.use(express.json());
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3005;
 
 // ============ FONCTION POUR TROUVER L'IP AUTOMATIQUEMENT ============
 function getLocalIp() {
@@ -48,7 +48,7 @@ function getBaseUrl(req) {
   }
 
   // Détection ngrok
-  if (host && (host.includes('ngrok-free.dev') || host.includes('ngrok.io') || host.includes('ngrok'))) {
+  if (host && (host.includes('ngrok-free.app') || host.includes('ngrok-free.dev') || host.includes('ngrok.io') || host.includes('ngrok'))) {
     const ngrokUrl = `${protocol}://${host}`;
     console.log('🌐 Mode ngrok détecté:', ngrokUrl);
     return ngrokUrl;
