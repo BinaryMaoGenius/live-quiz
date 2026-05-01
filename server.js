@@ -154,98 +154,259 @@ app.get('/', (req, res) => {
   const baseUrl = getBaseUrl(req);
   res.send(`
     <!DOCTYPE html>
-    <html>
+    <html lang="fr">
     <head>
-      <title>Live Quiz System</title>
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Digital Day - Mission Hub</title>
+      <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
       <style>
+        :root {
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.5);
+            --bg: #030712;
+            --surface: #0f172a;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-muted: #64748b;
+        }
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        
         body {
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          min-height: 100vh;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
         }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: 
+                linear-gradient(rgba(59, 130, 246, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(59, 130, 246, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -1;
+        }
+
         .container {
-          background: white;
-          border-radius: 20px;
-          padding: 40px;
-          box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-          text-align: center;
-          max-width: 500px;
-          width: 100%;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
         }
-        h1 { color: #667eea; margin-bottom: 10px; font-size: 2em; }
-        p { color: #666; margin-bottom: 30px; }
-        button {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          border: none;
-          padding: 12px 30px;
-          border-radius: 25px;
-          font-size: 16px;
-          cursor: pointer;
-          transition: transform 0.3s;
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 3px;
+            background: var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
         }
-        button:hover { transform: translateY(-2px); }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            letter-spacing: 0.1em;
+            font-weight: 900;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0.4rem 0.8rem;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 10px #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .info-panel {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--border);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            word-break: break-all;
+        }
+
+        .btn {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--accent);
+            padding: 1.25rem;
+            border-radius: 0.75rem;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .btn:hover {
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 0 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
         .result {
-          margin-top: 20px;
-          text-align: left;
-          background: #f8f9fa;
-          padding: 20px;
-          border-radius: 10px;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+            text-align: left;
         }
-        a { color: #667eea; word-break: break-all; }
-        .qr-code { text-align: center; margin: 20px 0; }
-        img { max-width: 200px; border-radius: 10px; }
-        .ip-info {
-          background: #e8f4fd;
-          padding: 10px;
-          border-radius: 10px;
-          margin-bottom: 20px;
-          font-size: 14px;
-          word-break: break-all;
+
+        .result h3 {
+            font-size: 1rem;
+            color: #10b981;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
-        .status {
-          background: #d4edda;
-          color: #155724;
-          padding: 10px;
-          border-radius: 10px;
-          margin-bottom: 20px;
-          font-size: 12px;
+
+        .result-item {
+            margin-bottom: 1rem;
+        }
+
+        .result-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.2rem;
+        }
+
+        .result-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.5rem;
+            border-radius: 0.25rem;
+            word-break: break-all;
+        }
+        
+        .result a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+        
+        .result a:hover {
+            text-decoration: underline;
+        }
+
+        .qr-wrapper {
+            background: white;
+            padding: 10px;
+            border-radius: 0.5rem;
+            display: inline-block;
+            margin: 1rem 0;
+        }
+
+        .qr-wrapper img {
+            display: block;
+            max-width: 150px;
         }
       </style>
     </head>
     <body>
       <div class="container">
-        <h1>🎮 Live Quiz System</h1>
-        <div class="status">
-          ✅ Serveur actif
+        <div class="header">
+          <h1>ZUGENBERG <span style="color: var(--accent)">HUB</span></h1>
+          <div class="status-badge">
+            <div class="status-dot"></div>
+            System Online
+          </div>
         </div>
-        <div class="ip-info">
-          📡 Accès: <strong>${baseUrl}</strong>
+        
+        <div class="info-panel">
+          > GATEWAY_URL: ${baseUrl}<br>
+          > STATUS: READY FOR INITIALIZATION
         </div>
-        <p>Créez une partie et partagez le QR code</p>
-        <button onclick="createGame()">➕ Créer une nouvelle partie</button>
+        
+        <button class="btn" onclick="createGame()">⚡ Initialize New Session</button>
+        
         <div id="result"></div>
       </div>
+
       <script>
         async function createGame() {
           const response = await fetch('/api/game/create');
           const data = await response.json();
           document.getElementById('result').innerHTML = \`
             <div class="result">
-              <h3>✅ Partie créée !</h3>
-              <p><strong>ID:</strong> \${data.gameId}</p>
-              <div class="qr-code"><img src="\${data.qr}" alt="QR Code"></div>
-              <p>📱 <strong>Lien joueur:</strong><br><a href="\${data.url}" target="_blank">\${data.url}</a></p>
-              <p>🎮 <strong>Lien admin:</strong><br><a href="\${data.adminUrl}" target="_blank">\${data.adminUrl}</a></p>
-              <p>📺 <strong>Lien écran:</strong><br><a href="\${data.screenUrl}" target="_blank">\${data.screenUrl}</a></p>
-              <p style="font-size:12px; color:#666; margin-top:10px;">⚠️ Envoyez le <strong>lien joueur</strong> à vos participants</p>
+              <h3>[+] Session Established</h3>
+              
+              <div class="result-item">
+                <div class="result-label">Mission ID</div>
+                <div class="result-value" style="color: var(--accent); font-weight: bold;">\${data.gameId}</div>
+              </div>
+              
+              <div style="text-align: center;">
+                  <div class="qr-wrapper"><img src="\${data.qr}" alt="Access Code"></div>
+              </div>
+
+              <div class="result-item">
+                <div class="result-label">Player Access Vector</div>
+                <div class="result-value"><a href="\${data.url}" target="_blank">\${data.url}</a></div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-label">Command Console</div>
+                <div class="result-value"><a href="\${data.adminUrl}" target="_blank">\${data.adminUrl}</a></div>
+              </div>
+              
+              <div class="result-item">
+                <div class="result-label">Main Display</div>
+                <div class="result-value"><a href="\${data.screenUrl}" target="_blank">\${data.screenUrl}</a></div>
+              </div>
             </div>
           \`;
         }
