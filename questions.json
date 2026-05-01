@@ -1,0 +1,137 @@
+[
+  {
+    "id": 1,
+    "text": "Dans Dragon Ball Z, quel est le nom de l'attaque signature de Vegeta ?",
+    "options": ["Kamehameha", "Big Bang Attack", "Final Flash", "Galick Gun"],
+    "correct": 2,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 2,
+    "text": "Dans Naruto, quel est le vrai nom de Tobi ?",
+    "options": ["Madara Uchiwa", "Obito Uchiwa", "Nagato", "Kabuto"],
+    "correct": 1,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 3,
+    "text": "Dans One Piece, quel est le grade de Monkey D. Garp ?",
+    "options": ["Amiral", "Vice-Amiral", "Contre-Amiral", "Capitaine"],
+    "correct": 1,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 4,
+    "text": "Dans Demon Slayer, quel est le nom du pilier de l'eau ?",
+    "options": ["Rengoku Kyojuro", "Tomioka Giyu", "Uzui Tengen", "Himejima Gyomei"],
+    "correct": 1,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 5,
+    "text": "Dans Attack on Titan, qui a tué Eren à la fin ?",
+    "options": ["Levi", "Armin", "Mikasa", "Jean"],
+    "correct": 2,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 6,
+    "text": "Dans My Hero Academia, quel est le nom du père de Shoto Todoroki ?",
+    "options": ["Endeavor", "All Might", "Hawks", "Best Jeanist"],
+    "correct": 0,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 7,
+    "text": "Dans Jujutsu Kaisen, quel est le nom de l'école de Yuji Itadori ?",
+    "options": ["Académie de Tokyo", "Académie de Kyoto", "Académie de Sendai", "Académie d'Osaka"],
+    "correct": 0,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 8,
+    "text": "Dans Death Note, quel est le vrai nom de Kira ?",
+    "options": ["L Lawliet", "Light Yagami", "Mello", "Near"],
+    "correct": 1,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 9,
+    "text": "Dans Fullmetal Alchemist, quel est le nom du frère d'Edward Elric ?",
+    "options": ["Alphonse", "Van Hohenheim", "Roy Mustang", "Maes Hughes"],
+    "correct": 0,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 10,
+    "text": "Dans Tokyo Revengers, quel est le nom du chef du Tokyo Manji Gang ?",
+    "options": ["Draken", "Mikey", "Takemichi", "Baji"],
+    "correct": 1,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 11,
+    "text": "Dans Chainsaw Man, comment s'appelle le chien de Denji ?",
+    "options": ["Pochita", "Aki", "Power", "Makima"],
+    "correct": 0,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 12,
+    "text": "Dans Spy x Family, quel est le vrai nom de Loid Forger ?",
+    "options": ["Franky", "Yor", "Anya", "Twilight"],
+    "correct": 3,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 13,
+    "text": "Dans Hunter x Hunter, quel est le nom du père de Gon ?",
+    "options": ["Hisoka", "Killua", "Ging", "Leorio"],
+    "correct": 2,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 14,
+    "text": "Dans Bleach, quel est le nom de l'épée d'Ichigo ?",
+    "options": ["Senbonzakura", "Zangetsu", "Ryujin Jakka", "Hyorinmaru"],
+    "correct": 1,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  },
+  {
+    "id": 15,
+    "text": "Dans Sword Art Online, quel est le nom de l'épée à deux mains de Kirito ?",
+    "options": ["Elucidator", "Dark Repulser", "Excalibur", "Gram"],
+    "correct": 0,
+    "timeLimit": 15,
+    "points": 100,
+    "image": null
+  }
+]

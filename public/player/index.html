@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Interface Joueur</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .registration-form {
+            text-align: center;
+        }
+
+        .registration-form h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .avatar-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .avatar {
+            font-size: 40px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .avatar:hover {
+            transform: scale(1.1);
+            background: #f0f0f0;
+        }
+
+        .avatar.selected {
+            background: #667eea;
+            transform: scale(1.1);
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .quiz-area {
+            display: none;
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.5em;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .options {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .timer {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+        }
+
+        .result {
+            text-align: center;
+            padding: 20px;
+            background: #d4edda;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .leaderboard {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .leaderboard h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .leaderboard-item .rank {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .waiting-message {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s ease-out;
+            z-index: 1000;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .notification.success {
+            border-left: 4px solid #28a745;
+        }
+
+        .notification.error {
+            border-left: 4px solid #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎮 Quiz Challenge</h1>
+            <p>Prêt à tester tes connaissances ?</p>
+        </div>
+        
+        <div class="content">
+            <div id="registration" class="registration-form">
+                <h2>👋 Entre dans l'arène !</h2>
+                <div class="input-group">
+                    <input type="text" id="pseudo" placeholder="Ton pseudo" maxlength="20" required>
+                </div>
+                <div class="avatar-selector" id="avatarSelector">
+                    <div class="avatar" data-avatar="👤">👤</div>
+                    <div class="avatar" data-avatar="😎">😎</div>
+                    <div class="avatar" data-avatar="🦸">🦸</div>
+                    <div class="avatar" data-avatar="🧙">🧙</div>
+                    <div class="avatar" data-avatar="🐱">🐱</div>
+                    <div class="avatar" data-avatar="🚀">🚀</div>
+                </div>
+                <button onclick="joinGame()">🎯 Rejoindre le quiz</button>
+            </div>
+            
+            <div id="quizArea" class="quiz-area">
+                <div class="timer" id="timer">⏱️ En attente de la prochaine question...</div>
+                <div class="question-card" id="questionCard">
+                    <div class="question-text" id="questionText"></div>
+                    <div class="options" id="options"></div>
+                </div>
+                <div class="leaderboard" id="leaderboard">
+                    <h3>🏆 Classement</h3>
+                    <div id="leaderboardList"></div>
+                </div>
+            </div>
+            
+            <div id="waitingMessage" class="waiting-message" style="display: none;">
+                <div class="spinner"></div>
+                <p>🎮 En attente du début du quiz...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let socket;
+        let gameId;
+        let playerInfo = null;
+        let currentQuestion = null;
+        let canAnswer = false;
+
+        // Extraire l'ID du jeu depuis l'URL
+        gameId = window.location.pathname.split('/')[2];
+
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        function joinGame() {
+            const pseudo = document.getElementById('pseudo').value.trim();
+            const selectedAvatar = document.querySelector('.avatar.selected');
+            const avatar = selectedAvatar ? selectedAvatar.getAttribute('data-avatar') : '👤';
+            
+            if (!pseudo) {
+                showNotification('Veuillez entrer un pseudo', 'error');
+                return;
+            }
+            
+            socket = io();
+            
+            socket.on('connect', () => {
+                socket.emit('join-game', { gameId, pseudo, avatar });
+            });
+            
+            socket.on('error', (msg) => {
+                showNotification(msg, 'error');
+            });
+            
+            socket.on('joined', (data) => {
+                playerInfo = data;
+                document.getElementById('registration').style.display = 'none';
+                document.getElementById('waitingMessage').style.display = 'block';
+                showNotification(`Bienvenue ${pseudo} ! En attente du début du quiz...`);
+            });
+            
+            socket.on('game-started', () => {
+                document.getElementById('waitingMessage').style.display = 'none';
+                document.getElementById('quizArea').style.display = 'block';
+                showNotification('🎬 Le quiz commence ! Prépare-toi !');
+            });
+            
+            socket.on('new-question', (data) => {
+                currentQuestion = data.question;
+                displayQuestion(data.question, data.questionNumber, data.totalQuestions);
+                canAnswer = true;
+                startTimer(data.question.timeLimit);
+            });
+            
+            socket.on('answer-result', (result) => {
+                if (result.correct) {
+                    showNotification(`✅ Correct ! +${result.points} points (${(result.responseTime/1000).toFixed(1)}s)`, 'success');
+                } else {
+                    showNotification(`❌ Faux ! La bonne réponse était : ${result.correctAnswer}`, 'error');
+                }
+                canAnswer = false;
+            });
+            
+            socket.on('leaderboard-update', (scores) => {
+                updateLeaderboard(scores);
+            });
+            
+            socket.on('question-end', (data) => {
+                canAnswer = false;
+                document.getElementById('timer').innerHTML = '⏰ Temps écoulé !';
+                if (data.timeUp) {
+                    showNotification(`⏰ Temps écoulé ! La réponse était : ${data.correctAnswer}`, 'error');
+                }
+            });
+            
+            socket.on('quiz-end', (data) => {
+                let message = '🏆 Quiz terminé ! 🏆\n\nTop 3 :\n';
+                data.top3.forEach(([pseudo, score], index) => {
+                    message += `${index + 1}. ${pseudo} : ${score} points\n`;
+                });
+                alert(message);
+                showNotification('🎉 Félicitations à tous ! 🎉', 'success');
+            });
+            
+            socket.on('game-reset', () => {
+                location.reload();
+            });
+        }
+        
+        function displayQuestion(question, num, total) {
+            document.getElementById('questionText').innerHTML = `
+                <strong>Question ${num}/${total}</strong><br>
+                ${question.text}
+                ${question.image ? `<br><img src="${question.image}" style="max-width: 100%; margin-top: 10px;">` : ''}
+            `;
+            
+            const optionsHtml = question.options.map((opt, idx) => `
+                <div class="option" data-option="${idx}" onclick="submitAnswer(${idx})">
+                    ${String.fromCharCode(65+idx)}. ${opt}
+                </div>
+            `).join('');
+            
+            document.getElementById('options').innerHTML = optionsHtml;
+        }
+        
+        function startTimer(seconds) {
+            let timeLeft = seconds;
+            const timerElement = document.getElementById('timer');
+            
+            const interval = setInterval(() => {
+                if (!canAnswer || timeLeft <= 0) {
+                    clearInterval(interval);
+                    return;
+                }
+                timerElement.innerHTML = `⏱️ Temps restant : ${timeLeft} secondes`;
+                timeLeft--;
+            }, 1000);
+        }
+        
+        function submitAnswer(optionIndex) {
+            if (!canAnswer) {
+                showNotification('Vous ne pouvez plus répondre à cette question', 'error');
+                return;
+            }
+            
+            canAnswer = false;
+            socket.emit('submit-answer', { gameId, answer: optionIndex });
+            
+            // Désactiver les options
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.add('disabled');
+            });
+        }
+        
+        function updateLeaderboard(scores) {
+            const sorted = Object.entries(scores).sort((a,b) => b[1] - a[1]);
+            const html = sorted.map(([pseudo, score], idx) => `
+                <div class="leaderboard-item">
+                    <span class="rank">${idx + 1}</span>
+                    <span>${pseudo}</span>
+                    <span>⭐ ${score} pts</span>
+                </div>
+            `).join('');
+            
+            document.getElementById('leaderboardList').innerHTML = html || '<p>Aucun joueur pour le moment</p>';
+        }
+        
+        // Gestionnaire de sélection d'avatar
+        document.querySelectorAll('.avatar').forEach(avatar => {
+            avatar.addEventListener('click', () => {
+                document.querySelectorAll('.avatar').forEach(a => a.classList.remove('selected'));
+                avatar.classList.add('selected');
+            });
+        });
+        
+        // Sélectionner le premier avatar par défaut
+        if (document.querySelector('.avatar')) {
+            document.querySelector('.avatar').classList.add('selected');
+        }
+    </script>
+</body>
+</html>
