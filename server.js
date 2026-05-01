@@ -359,7 +359,7 @@ app.get('/', (req, res) => {
     <body>
       <div class="container">
         <div class="header">
-          <h1>ZUGENBERG <span style="color: var(--accent)">HUB</span></h1>
+          <h1>DIGITAL <span style="color: var(--accent)">HUB</span></h1>
           <div class="status-badge">
             <div class="status-dot"></div>
             System Online
