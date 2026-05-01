@@ -362,16 +362,16 @@ app.get('/', (req, res) => {
           <h1>DIGITAL <span style="color: var(--accent)">HUB</span></h1>
           <div class="status-badge">
             <div class="status-dot"></div>
-            System Online
+            Système Actif
           </div>
         </div>
         
         <div class="info-panel">
-          > GATEWAY_URL: ${baseUrl}<br>
-          > STATUS: READY FOR INITIALIZATION
+          > URL_PASSERELLE: ${baseUrl}<br>
+          > STATUT : PRÊT POUR INITIALISATION
         </div>
         
-        <button class="btn" onclick="createGame()">⚡ Initialize New Session</button>
+        <button class="btn" onclick="createGame()">⚡ Initialiser Nouvelle Session</button>
         
         <div id="result"></div>
       </div>
@@ -382,29 +382,29 @@ app.get('/', (req, res) => {
           const data = await response.json();
           document.getElementById('result').innerHTML = \`
             <div class="result">
-              <h3>[+] Session Established</h3>
+              <h3>[+] Session Établie</h3>
               
               <div class="result-item">
-                <div class="result-label">Mission ID</div>
+                <div class="result-label">ID Mission</div>
                 <div class="result-value" style="color: var(--accent); font-weight: bold;">\${data.gameId}</div>
               </div>
               
               <div style="text-align: center;">
-                  <div class="qr-wrapper"><img src="\${data.qr}" alt="Access Code"></div>
+                  <div class="qr-wrapper"><img src="\${data.qr}" alt="Code d'Accès"></div>
               </div>
 
               <div class="result-item">
-                <div class="result-label">Player Access Vector</div>
+                <div class="result-label">Vecteur d'Accès Joueur</div>
                 <div class="result-value"><a href="\${data.url}" target="_blank">\${data.url}</a></div>
               </div>
               
               <div class="result-item">
-                <div class="result-label">Command Console</div>
+                <div class="result-label">Console de Commandement</div>
                 <div class="result-value"><a href="\${data.adminUrl}" target="_blank">\${data.adminUrl}</a></div>
               </div>
               
               <div class="result-item">
-                <div class="result-label">Main Display</div>
+                <div class="result-label">Écran Principal</div>
                 <div class="result-value"><a href="\${data.screenUrl}" target="_blank">\${data.screenUrl}</a></div>
               </div>
             </div>
