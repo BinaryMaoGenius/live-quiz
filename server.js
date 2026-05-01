@@ -449,38 +449,41 @@ io.on('connection', (socket) => {
 
   socket.on('submit-answer', ({ gameId, answer }) => {
     const game = games[gameId];
-    if (!game) return;
-    if (!game.questionActive) return;
+    if (!game || !game.questionActive || !game.currentQuestion) {
+      socket.emit('error', 'Action non autorisée ou question terminée');
+      return;
+    }
+    
     if (game.answeredPlayers.has(socket.id)) return;
     
     const question = game.currentQuestion;
-    if (!question) return;
-    
     const responseTime = Date.now() - game.questionStartTime;
-    const isCorrect = (answer === question.correct);
+    const isCorrect = (parseInt(answer) === parseInt(question.correct));
+    
+    const player = game.players[socket.id];
     
     if (isCorrect && responseTime <= question.timeLimit * 1000) {
       const points = calculatePoints(question.points, responseTime, question.timeLimit);
-      const player = game.players[socket.id];
+      
       if (player) {
         player.score += points;
         game.scores[player.pseudo] = player.score;
-        
-        socket.emit('answer-result', {
-          correct: true,
-          points: points,
-          responseTime: responseTime
-        });
-        
         io.to(gameId).emit('leaderboard-update', game.scores);
-        console.log(`✅ ${player.pseudo} a répondu correctement en ${(responseTime/1000).toFixed(1)}s, +${points} points`);
+        console.log(`✅ ${player.pseudo} a répondu correctement (+${points} pts)`);
       }
+      
+      socket.emit('answer-result', {
+        correct: true,
+        points: points,
+        responseTime: responseTime
+      });
     } else {
       socket.emit('answer-result', {
         correct: false,
         points: 0,
         correctAnswer: question.options[question.correct]
       });
+      if (player) console.log(`❌ ${player.pseudo} a donné une mauvaise réponse`);
     }
     
     game.answeredPlayers.add(socket.id);
