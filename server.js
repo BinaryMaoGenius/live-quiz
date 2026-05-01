@@ -19,7 +19,7 @@ const io = new Server(server, {
 app.use(express.static('public'));
 app.use(express.json());
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // ============ FONCTION POUR TROUVER L'IP AUTOMATIQUEMENT ============
 function getLocalIp() {
