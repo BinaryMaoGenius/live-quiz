@@ -3,224 +3,309 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz - Écran Public</title>
+    <title>Digital Day 2026 - Main Stage</title>
     <script src="/socket.io/socket.io.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #3b82f6;
+            --secondary: #8b5cf6;
+            --background: #020617;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: white;
             min-height: 100vh;
-            padding: 40px;
+            overflow: hidden;
+            padding: 4vw;
         }
 
-        .screen-container {
-            max-width: 1400px;
-            margin: 0 auto;
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(circle at 10% 10%, #1e1b4b 0%, #020617 100%);
+            z-index: -1;
+        }
+
+        .layout {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 40px;
+            height: calc(100vh - 8vw);
+        }
+
+        .main-card {
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            border-radius: 3rem;
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
         }
 
         .header {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin-bottom: 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .header h1 {
-            font-size: 3em;
-            color: #667eea;
-            margin-bottom: 10px;
-        }
-
-        .current-question {
-            background: white;
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 30px;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            min-height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .question-content {
-            width: 100%;
-        }
-
-        .question-text {
-            font-size: 2.5em;
-            margin-bottom: 30px;
-            color: #333;
-        }
-
-        .options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
-        }
-
-        .option {
-            background: #f8f9fa;
-            border: 3px solid #e0e0e0;
-            border-radius: 15px;
-            padding: 20px;
-            font-size: 1.2em;
-            transition: all 0.3s;
-        }
-
-        .option.correct {
-            background: #d4edda;
-            border-color: #28a745;
-            animation: pulse 0.5s ease-out;
-        }
-
-        .timer-bar {
-            width: 100%;
-            height: 10px;
-            background: #e0e0e0;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-top: 20px;
-        }
-
-        .timer-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            width: 100%;
-            transition: width 0.1s linear;
-        }
-
-        .leaderboard {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-
-        .leaderboard h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #667eea;
-        }
-
-        .leaderboard-grid {
-            display: grid;
-            gap: 10px;
-        }
-
-        .leaderboard-item {
+            margin-bottom: 4rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            font-size: 1.1em;
         }
 
-        .leaderboard-item.top-1 {
-            background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
-            font-size: 1.2em;
-            font-weight: bold;
+        .logo-box {
+            display: flex;
+            flex-direction: column;
         }
 
-        .leaderboard-item.top-2 {
-            background: linear-gradient(135deg, #c0c0c0 0%, #e0e0e0 100%);
+        .logo-box .badge {
+            font-size: 0.75rem;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 0.4em;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
         }
 
-        .leaderboard-item.top-3 {
-            background: linear-gradient(135deg, #cd7f32 0%, #e0a878 100%);
+        .logo-box h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
         }
 
-        .rank {
-            font-weight: bold;
-            font-size: 1.2em;
-            width: 50px;
+        .game-id-tag {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 0.75rem 1.5rem;
+            border-radius: 1rem;
+            font-family: monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #94a3b8;
+            border: 1px solid var(--glass-border);
         }
 
-        .pseudo {
+        .question-box {
             flex: 1;
-            margin-left: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
-        .score {
-            font-weight: bold;
-            font-size: 1.2em;
+        .q-meta {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
-        .waiting-message {
+        .q-text {
+            font-size: 3.5rem;
+            font-weight: 900;
+            line-height: 1.1;
+            letter-spacing: -0.03em;
+            margin-bottom: 3rem;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .opt-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .opt-card.correct {
+            background: #10b981;
+            border-color: #10b981;
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(16, 185, 129, 0.4);
+        }
+
+        .opt-letter {
+            width: 3.5rem;
+            height: 3.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--primary);
+        }
+
+        .opt-card.correct .opt-letter {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .timer-strip {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 8px;
+            background: var(--primary);
+            width: 100%;
+            transition: width 1s linear;
+        }
+
+        .leaderboard-card {
+            background: var(--glass);
+            backdrop-filter: blur(40px);
+            border: 1px solid var(--glass-border);
+            border-radius: 3rem;
+            padding: 4rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .leaderboard-card h2 {
+            font-size: 1.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 2.5rem;
+            color: #94a3b8;
+        }
+
+        .lb-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .lb-item {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 1.25rem 2rem;
+            border-radius: 1.5rem;
+            display: flex;
+            align-items: center;
+            border: 1px solid transparent;
+            transition: all 0.5s;
+        }
+
+        .lb-item.top-1 {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.2), transparent);
+            border-color: rgba(59, 130, 246, 0.3);
+            transform: scale(1.05) translateX(10px);
+        }
+
+        .lb-rank {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: var(--primary);
+            width: 40px;
+        }
+
+        .lb-pseudo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex: 1;
+            margin-left: 1rem;
+        }
+
+        .lb-score {
+            font-size: 1.5rem;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .waiting-full {
+            grid-column: span 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            padding: 60px;
+        }
+
+        .qr-area {
             background: white;
-            border-radius: 20px;
+            padding: 2rem;
+            border-radius: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 0 60px rgba(59, 130, 246, 0.3);
         }
 
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-            margin: 20px auto;
+        .qr-area img {
+            width: 300px;
+            height: 300px;
         }
 
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        .big-badge {
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--primary);
+            letter-spacing: 0.5em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        .answer-stats {
-            margin-top: 20px;
-            font-size: 1.1em;
-            color: #666;
+        .big-title {
+            font-size: 5rem;
+            font-weight: 900;
+            letter-spacing: -0.05em;
+            margin-bottom: 2rem;
         }
     </style>
 </head>
 <body>
-    <div class="screen-container">
-        <div class="header">
-            <h1>🎮 Quiz Challenge</h1>
-            <p>ID de la partie: <strong id="gameId"></strong></p>
+    <div class="layout" id="mainLayout">
+        <div id="waitingScreen" class="waiting-full">
+            <div class="big-badge">Digital Day 2026</div>
+            <h1 class="big-title">PRÊTS POUR LE CHALLENGE ?</h1>
+            <div class="qr-area" id="qrContainer">
+                <!-- QR Code dynamically injected by Admin if needed, or we show a generic wait -->
+                <div style="font-size: 8rem;">🎮</div>
+            </div>
+            <p style="font-size: 1.5rem; color: #94a3b8; font-weight: 600;">Scannez le QR Code sur l'écran de l'animateur<br>ID Partie: <span id="gameIdDisplay" style="color: white;">----</span></p>
         </div>
 
-        <div id="waitingMessage" class="waiting-message">
-            <div class="spinner"></div>
-            <h2>En attente du début du quiz...</h2>
-            <p>Scannez le QR code pour participer !</p>
-        </div>
-
-        <div id="quizContent" style="display: none;">
-            <div class="current-question" id="currentQuestion">
-                <div class="question-content">
-                    <div class="question-text" id="questionText"></div>
-                    <div class="options" id="options"></div>
-                    <div class="timer-bar">
-                        <div class="timer-progress" id="timerProgress"></div>
+        <div id="activeQuiz" style="display: none; contents;">
+            <div class="main-card">
+                <div class="header">
+                    <div class="logo-box">
+                        <span class="badge">Digital Day 2026</span>
+                        <h1>ARENA QUIZ</h1>
                     </div>
-                    <div class="answer-stats" id="answerStats"></div>
+                    <div class="game-id-tag" id="gameIdTag">----</div>
                 </div>
+
+                <div class="question-box">
+                    <div class="q-meta" id="qNum">Question 1/10</div>
+                    <div class="q-text" id="qText">Chargement de la question...</div>
+                    <div class="options-grid" id="options">
+                        <!-- Options injected -->
+                    </div>
+                </div>
+                
+                <div class="timer-strip" id="timerStrip"></div>
             </div>
 
-            <div class="leaderboard">
-                <h2>🏆 Classement en direct</h2>
-                <div class="leaderboard-grid" id="leaderboard"></div>
+            <div class="leaderboard-card">
+                <h2>CLASSEMENT LIVE</h2>
+                <div class="lb-list" id="lbList">
+                    <!-- Leaderboard injected -->
+                </div>
             </div>
         </div>
     </div>
@@ -228,17 +313,17 @@
     <script>
         let socket;
         let gameId;
-        let timerInterval = null;
-
+        
         gameId = window.location.pathname.split('/')[2];
-        document.getElementById('gameId').innerText = gameId;
+        document.getElementById('gameIdDisplay').innerText = gameId;
+        document.getElementById('gameIdTag').innerText = gameId;
 
         socket = io();
         socket.emit('join-game', { gameId, pseudo: 'Screen', avatar: '📺' });
 
         socket.on('game-started', () => {
-            document.getElementById('waitingMessage').style.display = 'none';
-            document.getElementById('quizContent').style.display = 'block';
+            document.getElementById('waitingScreen').style.display = 'none';
+            document.getElementById('activeQuiz').style.display = 'grid';
         });
 
         socket.on('new-question', (data) => {
@@ -247,94 +332,54 @@
         });
 
         socket.on('question-end', (data) => {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
             const correctAnswer = data.correctAnswer;
-            document.querySelectorAll('.option').forEach(opt => {
-                if (opt.textContent.includes(correctAnswer)) {
+            document.querySelectorAll('.opt-card').forEach(opt => {
+                if (opt.querySelector('.opt-label').innerText === correctAnswer) {
                     opt.classList.add('correct');
                 }
             });
-            document.getElementById('answerStats').innerHTML = `
-                <p>✅ Temps écoulé ! La bonne réponse était : ${correctAnswer}</p>
-            `;
         });
 
-        socket.on('leaderboard-update', (scores) => {
-            updateLeaderboard(scores);
-        });
+        socket.on('leaderboard-update', (scores) => updateLeaderboard(scores));
 
-        socket.on('quiz-end', (data) => {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
-            document.getElementById('answerStats').innerHTML = `
-                <p>🎉 Quiz terminé ! Félicitations à tous ! 🎉</p>
-            `;
-        });
-
-        function displayQuestion(question, num, total) {
-            document.getElementById('questionText').innerHTML = `
-                <strong>Question ${num}/${total}</strong><br>
-                ${question.text}
-                ${question.image ? `<br><img src="${question.image}" style="max-width: 60%; margin-top: 20px;">` : ''}
-            `;
+        function displayQuestion(q, num, total) {
+            document.getElementById('qNum').innerText = `Question ${num}/${total}`;
+            document.getElementById('qText').innerText = q.text;
             
-            const optionsHtml = question.options.map((opt, idx) => `
-                <div class="option">
-                    <strong>${String.fromCharCode(65+idx)}.</strong> ${opt}
+            const html = q.options.map((opt, idx) => `
+                <div class="opt-card">
+                    <div class="opt-letter">${String.fromCharCode(65+idx)}</div>
+                    <div class="opt-label">${opt}</div>
                 </div>
             `).join('');
             
-            document.getElementById('options').innerHTML = optionsHtml;
-            document.getElementById('answerStats').innerHTML = '';
-            
-            // Enlever la classe correct de toutes les options
-            document.querySelectorAll('.option').forEach(opt => {
-                opt.classList.remove('correct');
-            });
+            document.getElementById('options').innerHTML = html;
         }
 
         function startTimer(seconds) {
-            if (timerInterval) {
-                clearInterval(timerInterval);
-            }
+            const strip = document.getElementById('timerStrip');
+            strip.style.transition = 'none';
+            strip.style.width = '100%';
             
-            let timeLeft = seconds;
-            const progressBar = document.getElementById('timerProgress');
-            
-            timerInterval = setInterval(() => {
-                if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    return;
-                }
-                const progress = (timeLeft / seconds) * 100;
-                progressBar.style.width = `${progress}%`;
-                timeLeft--;
-            }, 1000);
+            setTimeout(() => {
+                strip.style.transition = `width ${seconds}s linear`;
+                strip.style.width = '0%';
+            }, 50);
         }
 
         function updateLeaderboard(scores) {
             const sorted = Object.entries(scores).sort((a,b) => b[1] - a[1]);
-            const top3 = sorted.slice(0, 10); // Afficher top 10
+            const top5 = sorted.slice(0, 5);
             
-            const html = top3.map(([pseudo, score], idx) => {
-                let rankClass = '';
-                if (idx === 0) rankClass = 'top-1';
-                else if (idx === 1) rankClass = 'top-2';
-                else if (idx === 2) rankClass = 'top-3';
-                
-                return `
-                    <div class="leaderboard-item ${rankClass}">
-                        <div class="rank">${idx + 1}</div>
-                        <div class="pseudo">${pseudo}</div>
-                        <div class="score">⭐ ${score} pts</div>
-                    </div>
-                `;
-            }).join('');
+            const html = top5.map(([pseudo, score], idx) => `
+                <div class="lb-item ${idx === 0 ? 'top-1' : ''}">
+                    <div class="lb-rank">#${idx + 1}</div>
+                    <div class="lb-pseudo">${pseudo}</div>
+                    <div class="lb-score">${score}</div>
+                </div>
+            `).join('');
             
-            document.getElementById('leaderboard').innerHTML = html || '<p>Aucun score pour le moment</p>';
+            document.getElementById('lbList').innerHTML = html || '<p>En attente des scores...</p>';
         }
     </script>
 </body>
