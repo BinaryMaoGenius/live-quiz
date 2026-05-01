@@ -36,9 +36,17 @@ function getLocalIp() {
 
 // ============ FONCTION POUR OBTENIR L'URL DE BASE (AUTO-DÉTECTION NGROK) ============
 function getBaseUrl(req) {
-  const protocol = req.protocol;
   const host = req.get('host');
+  const forwardedProto = req.get('X-Forwarded-Proto');
+  const protocol = forwardedProto || req.protocol;
   
+  // Détection Render
+  if (host && host.includes('onrender.com')) {
+    const renderUrl = `https://${host}`;
+    console.log('🚀 Mode Render détecté:', renderUrl);
+    return renderUrl;
+  }
+
   // Détection ngrok
   if (host && (host.includes('ngrok-free.dev') || host.includes('ngrok.io') || host.includes('ngrok'))) {
     const ngrokUrl = `${protocol}://${host}`;
