@@ -33,6 +33,10 @@ node server.js     # http://localhost:3000
 ```
 Un fichier `render.yaml` est fourni pour un déploiement sur Render.
 
+## Licence
+
+Code sous [licence MIT](./LICENSE) · © 2026 Emmanuel Elisé Koné.
+
 ---
 
 Construit par **Emmanuel Elisé Koné** ([BinaryMaoGenius](https://github.com/BinaryMaoGenius)) · *La tech en clair*
