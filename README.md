@@ -16,7 +16,7 @@
 - ⚡ **Real-time Synchronization**: Instant question broadcasting and answer collection.
 - 📊 **Live Leaderboards**: Immediate feedback and competitive ranking.
 - 📱 **Mobile-First Player UI**: Ensures participants have a seamless experience on any device.
-- ðŸ› ï¸ **Host Dashboard**: Complete control over the game flow and statistics.
+- 🛠️ **Host Dashboard**: Complete control over the game flow and statistics.
 
-## ðŸ‘¨â€ðŸ’» Developer
+## 👨‍💻 Developer
 Built by [BinaryMaoGenius](https://github.com/BinaryMaoGenius).
