@@ -1,22 +1,38 @@
 <div align="center">
-  <h1>⏱️ Live Quiz App</h1>
-  <p><strong>Real-time interactive quiz application for events and training sessions.</strong></p>
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/banner-dark.svg">
+    <img src="assets/banner-light.svg" alt="Live Quiz" width="100%">
+  </picture>
 </div>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black" />
-  <img src="https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white" />
-  <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
-</p>
+Application de quiz **en temps réel** : un animateur lance la partie, les participants répondent depuis leur téléphone et un grand écran affiche le jeu. Conçue pour l’événement [Digital Day](https://github.com/BinaryMaoGenius/digital_day).
 
-## 🚀 Overview
-**Live Quiz** is a dynamic web application designed to host real-time trivia and assessments. Perfect for educational environments, corporate training, or casual events, it allows a host to run a quiz while participants answer simultaneously on their devices.
+![Node.js](https://img.shields.io/badge/Node.js-0E0E0C?style=flat-square&logo=nodedotjs&logoColor=D9A441) ![Express](https://img.shields.io/badge/Express-0E0E0C?style=flat-square&logo=express&logoColor=D9A441) ![Socket.IO](https://img.shields.io/badge/Socket.IO-0E0E0C?style=flat-square&logo=socketdotio&logoColor=D9A441) ![JavaScript](https://img.shields.io/badge/JavaScript-0E0E0C?style=flat-square&logo=javascript&logoColor=D9A441)
 
-## ✨ Key Features
-- ⚡ **Real-time Synchronization**: Instant question broadcasting and answer collection.
-- 📊 **Live Leaderboards**: Immediate feedback and competitive ranking.
-- 📱 **Mobile-First Player UI**: Ensures participants have a seamless experience on any device.
-- 🛠️ **Host Dashboard**: Complete control over the game flow and statistics.
+## Trois interfaces
+| Interface | Route | Rôle |
+|---|---|---|
+| **Animateur** | `/admin/:gameId` | Démarrer, passer à la question suivante, réinitialiser |
+| **Joueur** | `/player/:gameId` | Rejoindre avec un pseudo et un avatar, répondre |
+| **Écran** | `/screen/:gameId` | Affichage pour la salle |
 
-## 👨‍💻 Developer
-Built by [BinaryMaoGenius](https://github.com/BinaryMaoGenius).
+Une partie est créée via `/api/game/create`, et un **QR code** permet aux joueurs de la rejoindre. Les questions (15 actuellement) sont dans `questions.json`.
+
+```mermaid
+flowchart LR
+  A[Animateur] -- start / next --> S[Serveur Express + Socket.IO]
+  P[Joueurs] -- join / réponse --> S
+  S -- questions / scores --> E[Écran de la salle]
+  S -- questions --> P
+```
+
+## Lancer le projet
+```bash
+npm install
+node server.js     # http://localhost:3000
+```
+Un fichier `render.yaml` est fourni pour un déploiement sur Render.
+
+---
+
+Construit par **Emmanuel Elisé Koné** ([BinaryMaoGenius](https://github.com/BinaryMaoGenius)) · *La tech en clair*
