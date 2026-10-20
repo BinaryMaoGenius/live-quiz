@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>â±ï¸ Live Quiz App</h1>
+  <h1>⏱️ Live Quiz App</h1>
   <p><strong>Real-time interactive quiz application for events and training sessions.</strong></p>
 </div>
 
@@ -9,13 +9,13 @@
   <img src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
 </p>
 
-## ðŸš€ Overview
+## 🚀 Overview
 **Live Quiz** is a dynamic web application designed to host real-time trivia and assessments. Perfect for educational environments, corporate training, or casual events, it allows a host to run a quiz while participants answer simultaneously on their devices.
 
-## âœ¨ Key Features
-- âš¡ **Real-time Synchronization**: Instant question broadcasting and answer collection.
-- ðŸ“Š **Live Leaderboards**: Immediate feedback and competitive ranking.
-- ðŸ“± **Mobile-First Player UI**: Ensures participants have a seamless experience on any device.
+## ✨ Key Features
+- ⚡ **Real-time Synchronization**: Instant question broadcasting and answer collection.
+- 📊 **Live Leaderboards**: Immediate feedback and competitive ranking.
+- 📱 **Mobile-First Player UI**: Ensures participants have a seamless experience on any device.
 - ðŸ› ï¸ **Host Dashboard**: Complete control over the game flow and statistics.
 
 ## ðŸ‘¨â€ðŸ’» Developer
